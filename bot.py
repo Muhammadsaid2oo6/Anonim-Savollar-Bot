@@ -32,10 +32,9 @@ try:
         raise ValueError("MONGODB_URI environment variable is not set")
     
     client = MongoClient(mongodb_uri,
-                        serverSelectionTimeoutMS=10000,
+                        serverSelectionTimeoutMS=30000,
                         connectTimeoutMS=20000,
-                        socketTimeoutMS=20000,
-                        tlsCAFile=certifi.where())
+                        socketTimeoutMS=20000)
     
     # Test the connection
     client.admin.command('ping')
@@ -186,8 +185,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         
         share_button = InlineKeyboardMarkup([
-            [InlineKeyboardButton("🔗 Havola ulashish", callback_data=f"copy_{link_code}")],
-            [InlineKeyboardButton("📢 Tarqatish", switch_inline_query=share_text)]
+            [InlineKeyboardButton("🔗 Havola ulashish", switch_inline_query=share_text)]
         ])
         
         await update.message.reply_text(
@@ -306,8 +304,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             
             share_button = InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔗 Havola ulashish", callback_data=f"copy_{link_code}")],
-                [InlineKeyboardButton("📢 Tarqatish", switch_inline_query=share_text)]
+                [InlineKeyboardButton("🔗 Havola ulashish", switch_inline_query=share_text)]
             ])
             
             await update.message.reply_text(
@@ -752,28 +749,6 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         logger.error(f"Error in inline query: {e}")
 
-async def copy_link_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle the copy link button callback"""
-    try:
-        query = update.callback_query
-        await query.answer("Havola nusxalandi!")
-        
-        # Extract the link code from callback data
-        link_code = query.data.split('_')[1]
-        user_link = f"t.me/AnonimVaqtiBot?start={link_code}"
-        
-        # Send the link in a separate message for easy copying
-        await query.message.reply_text(
-            f"<code>{user_link}</code>",
-            parse_mode='HTML',
-            reply_markup=InlineKeyboardMarkup([[
-                InlineKeyboardButton("🔄 Yangi havola yaratish", callback_data="new_link")
-            ]])
-        )
-    except Exception as e:
-        logger.error(f"Error in copy link callback: {e}")
-        await query.answer("Xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring.")
-
 async def handle_edited_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle edited messages"""
     try:
@@ -843,9 +818,6 @@ def main():
 
         # Inline query handler
         application.add_handler(InlineQueryHandler(inline_query))
-
-        # Copy link callback handler
-        application.add_handler(CallbackQueryHandler(copy_link_callback, pattern="^copy_"))
 
         logger.info("Starting bot...")
 
