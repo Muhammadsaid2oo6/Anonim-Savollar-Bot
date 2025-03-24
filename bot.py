@@ -13,6 +13,7 @@ import asyncio
 from uuid import uuid4
 from pymongo import MongoClient
 import ssl
+import certifi
 
 # Load environment variables
 load_dotenv()
@@ -31,9 +32,12 @@ try:
         raise ValueError("MONGODB_URI environment variable is not set")
     
     client = MongoClient(mongodb_uri,
-                        serverSelectionTimeoutMS=5000,
-                        connect=True,
-                        retryWrites=True)
+                        serverSelectionTimeoutMS=10000,
+                        connectTimeoutMS=20000,
+                        socketTimeoutMS=20000,
+                        tlsCAFile=certifi.where())
+    
+    # Test the connection
     client.admin.command('ping')
     logger.info("Successfully connected to MongoDB!")
 except Exception as e:
