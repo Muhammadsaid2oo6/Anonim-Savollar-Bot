@@ -179,7 +179,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         welcome_message = (
             "<b>🚀 Hoziroq anonim xabarlar qabul qilishni boshlang!</b>\n\n"
             "<b>Sizning havolangiz:</b>\n"
-            f"<code>{user_link}</code>\n\n"
+            f"{user_link}\n\n"
             "👆 Anonim xabarlar qabul qilishni boshlash uchun ushbu havolani "
             "<b>Telegram/TikTok/Instagram</b> profil tavsifiga joylashtiring 💭"
         )
@@ -298,7 +298,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             welcome_message = (
                 "<b>🚀 Hoziroq anonim xabarlar qabul qilishni boshlang!</b>\n\n"
                 "<b>Sizning havolangiz:</b>\n"
-                f"<code>{user_link}</code>\n\n"
+                f"{user_link}\n\n"
                 "👆 Anonim xabarlar qabul qilishni boshlash uchun ushbu havolani "
                 "<b>Telegram/TikTok/Instagram</b> profil tavsifiga joylashtiring 💭"
             )
