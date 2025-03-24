@@ -26,10 +26,14 @@ logger = logging.getLogger(__name__)
 
 # MongoDB setup with increased timeout
 try:
-    client = MongoClient(os.getenv('MONGODB_URI'), 
+    mongodb_uri = os.getenv('MONGODB_URI')
+    if not mongodb_uri:
+        raise ValueError("MONGODB_URI environment variable is not set")
+    
+    client = MongoClient(mongodb_uri,
                         serverSelectionTimeoutMS=5000,
-                        tls=True,
-                        tlsAllowInvalidCertificates=True)
+                        connect=True,
+                        retryWrites=True)
     client.admin.command('ping')
     logger.info("Successfully connected to MongoDB!")
 except Exception as e:
