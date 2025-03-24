@@ -12,6 +12,7 @@ from bson import ObjectId
 import asyncio
 from uuid import uuid4
 from pymongo import MongoClient
+import ssl
 
 # Load environment variables
 load_dotenv()
@@ -24,24 +25,20 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # MongoDB setup with increased timeout
-client = MongoClient(
-    os.getenv('MONGODB_URI'),
-    serverSelectionTimeoutMS=10000,
-    connectTimeoutMS=10000,
-    socketTimeoutMS=10000
-)
-db = client['hushtalkbot']
-users_collection = db['users']
-messages_collection = db['messages']
-blocked_collection = db['blocked']
-
-# Test MongoDB connection
 try:
+    client = MongoClient(os.getenv('MONGODB_URI'), 
+                        serverSelectionTimeoutMS=5000,
+                        ssl=True,
+                        ssl_cert_reqs=ssl.CERT_NONE)
     client.admin.command('ping')
     logger.info("Successfully connected to MongoDB!")
 except Exception as e:
     logger.error(f"Failed to connect to MongoDB: {e}")
     raise
+db = client['hushtalkbot']
+users_collection = db['users']
+messages_collection = db['messages']
+blocked_collection = db['blocked']
 
 def generate_unique_code():
     """Generate a unique code for user links"""
