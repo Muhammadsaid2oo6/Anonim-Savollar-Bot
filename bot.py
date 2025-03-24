@@ -28,8 +28,8 @@ logger = logging.getLogger(__name__)
 try:
     client = MongoClient(os.getenv('MONGODB_URI'), 
                         serverSelectionTimeoutMS=5000,
-                        ssl=True,
-                        ssl_cert_reqs=ssl.CERT_NONE)
+                        tls=True,
+                        tlsAllowInvalidCertificates=True)
     client.admin.command('ping')
     logger.info("Successfully connected to MongoDB!")
 except Exception as e:
