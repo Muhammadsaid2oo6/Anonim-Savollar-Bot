@@ -1,0 +1,16 @@
+[Unit]
+Description=AnonimVaqti Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/AnonimVaqtiBot
+Environment=PYTHONPATH=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3.9
+Environment=PATH=/home/ubuntu/AnonimVaqtiBot/venv/bin:$PATH
+ExecStart=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3.9 bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target 
