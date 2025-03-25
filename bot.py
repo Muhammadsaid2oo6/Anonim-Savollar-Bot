@@ -19,6 +19,9 @@ import certifi
 # Load environment variables
 load_dotenv()
 
+# Admin user ID (your Telegram user ID)
+ADMIN_USER_ID = 1153468531
+
 # Configure logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -791,6 +794,47 @@ async def blacklist_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.error(f"Error in blacklist command: {e}")
         await update.message.reply_text("Xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring.")
 
+async def clear_db_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle the /cleardb command - only available to admin"""
+    try:
+        # Check if user is admin (you can replace this with your user ID)
+        if update.effective_user.id != ADMIN_USER_ID:
+            await update.message.reply_text(
+                "❌ Bu buyruq faqat admin uchun."
+            )
+            return
+
+        # Clear messages collection
+        messages_collection.delete_many({})
+        
+        # Clear blocked users
+        blocked_collection.delete_many({})
+        
+        # Clear user data except link codes
+        users_collection.update_many(
+            {},
+            {
+                '$unset': {
+                    'last_active': "",
+                    'username': "",
+                    'first_name': ""
+                }
+            }
+        )
+
+        await update.message.reply_text(
+            "✅ Bazadagi ma'lumotlar tozalandi.\n"
+            "• Xabarlar\n"
+            "• Bloklashlar\n"
+            "• Foydalanuvchi statistikasi"
+        )
+
+    except Exception as e:
+        logger.error(f"Error in clear_db command: {e}")
+        await update.message.reply_text(
+            "Xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring."
+        )
+
 def main():
     """Start the bot"""
     try:
@@ -807,6 +851,7 @@ def main():
         application.add_handler(CommandHandler("url", url_command))
         application.add_handler(CommandHandler("issue", issue_command))
         application.add_handler(CommandHandler("blacklist", blacklist_command))
+        application.add_handler(CommandHandler("cleardb", clear_db_command))
         application.add_handler(CallbackQueryHandler(button_callback))
         
         # Add handler for edited messages
