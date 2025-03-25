@@ -11,7 +11,9 @@ User=ubuntu
 WorkingDirectory=/home/ubuntu/AnonimVaqtiBot
 Environment=PYTHONPATH=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3.9
 Environment=PATH=/home/ubuntu/AnonimVaqtiBot/venv/bin:$PATH
-ExecStart=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3.9 bot.py
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDEVMODE=1
+ExecStart=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3.9 -c 'import asyncio; asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy()); import bot'
 Restart=on-failure
 RestartSec=5s
 TimeoutStartSec=0
