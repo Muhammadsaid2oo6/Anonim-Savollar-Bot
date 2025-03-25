@@ -1,24 +1,16 @@
 [Unit]
 Description=AnonimVaqti Telegram Bot
-After=network.target mongodb.service
+After=network.target
 Wants=network-online.target
-StartLimitIntervalSec=500
-StartLimitBurst=5
 
 [Service]
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/AnonimVaqtiBot
-Environment=PYTHONPATH=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3.9
-Environment=PATH=/home/ubuntu/AnonimVaqtiBot/venv/bin:$PATH
 Environment=PYTHONUNBUFFERED=1
-Environment=PYTHONDEVMODE=1
-ExecStart=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3.9 -c 'import asyncio; asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy()); import bot'
+ExecStart=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3 bot.py
 Restart=on-failure
-RestartSec=5s
-TimeoutStartSec=0
-TimeoutStopSec=30
-KillMode=mixed
+RestartSec=30
 StandardOutput=append:/var/log/anonimvaqti-bot.log
 StandardError=append:/var/log/anonimvaqti-bot.error.log
 
