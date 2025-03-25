@@ -138,7 +138,7 @@ def create_share_text(link_code: str) -> str:
     """Create share text without bot username mention"""
     return (
         "**Bu havola orqali menga anonim xabar yuborish mumkin:**\n\n"
-        f"t.me/AnonimVaqtiBot?start={link_code}"
+        f"t.me/AskinAnonbot?start={link_code}"
     )
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -181,7 +181,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         
         # Create the anonymous message link
-        user_link = f"t.me/AnonimVaqtiBot?start={link_code}"
+        user_link = f"t.me/AskinAnonbot?start={link_code}"
         share_text = f"**Bu havola orqali menga anonim xabar yuborish mumkin:**\n\n{user_link}"
         
         welcome_message = (
@@ -216,7 +216,7 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user = users_collection.find_one({'user_id': user_id})
         link_code = user.get('link_code', generate_unique_code())
         
-        user_link = f"t.me/AnonimVaqtiBot?start={link_code}"
+        user_link = f"t.me/AskinAnonbot?start={link_code}"
         share_text = f"**Bu havola orqali menga anonim xabar yuborish mumkin:**\n\n{user_link}"
         
         stats_message = (
@@ -300,7 +300,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             
             # Create the anonymous message link
-            user_link = f"t.me/AnonimVaqtiBot?start={link_code}"
+            user_link = f"t.me/AskinAnonbot?start={link_code}"
             share_text = f"**Bu havola orqali menga anonim xabar yuborish mumkin:**\n\n{user_link}"
             
             welcome_message = (
@@ -584,7 +584,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if query.data.startswith('forward_'):
             # Get the link code from the callback data
             link_code = query.data.split('_')[1]
-            user_link = f"t.me/AnonimVaqtiBot?start={link_code}"
+            user_link = f"t.me/AskinAnonbot?start={link_code}"
             
             # Create the message that will be forwarded
             share_text = (
@@ -692,7 +692,7 @@ async def url_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         
         # Create the new anonymous message link
-        user_link = f"t.me/AnonimVaqtiBot?start={new_link_code}"
+        user_link = f"t.me/AskinAnonbot?start={new_link_code}"
         
         await update.message.reply_text(
             f"✅ Sizning yangi havolangiz:\n\n{user_link}"
@@ -736,7 +736,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             link_code = user_data['link_code']
         
-        user_link = f"t.me/AnonimVaqtiBot?start={link_code}"
+        user_link = f"t.me/AskinAnonbot?start={link_code}"
         share_text = f"**Bu havola orqali menga anonim xabar yuborish mumkin:**\n\n{user_link}"
         
         results = [
