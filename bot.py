@@ -373,6 +373,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                         message_data['type'] = 'photo'
                         if update.message.caption:
                             message_data['caption'] = update.message.caption
+                    elif update.message.animation:
+                        message_data['file_id'] = update.message.animation.file_id
+                        message_data['type'] = 'animation'
+                        if update.message.caption:
+                            message_data['caption'] = update.message.caption
                     
                     message_id = messages_collection.insert_one(message_data).inserted_id
                     
@@ -425,6 +430,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                 chat_id=recipient_id,
                                 photo=message_data['file_id'],
                                 caption=photo_caption,
+                                reply_markup=reply_markup,
+                                parse_mode='HTML'
+                            )
+
+                        elif message_data['type'] == 'animation':
+                            caption = message_data.get('caption', '')
+                            gif_caption = (
+                                "<b>📨 Sizga yangi anonim GIF keldi!</b>\n\n"
+                                f"{caption}\n\n"
+                                "↩️ Javob berish uchun xabarni chapga suring"
+                            )
+                            
+                            sent_message = await context.bot.send_animation(
+                                chat_id=recipient_id,
+                                animation=message_data['file_id'],
+                                caption=gif_caption,
                                 reply_markup=reply_markup,
                                 parse_mode='HTML'
                             )
@@ -495,6 +516,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 message_data['type'] = 'photo'
                 if update.message.caption:
                     message_data['caption'] = update.message.caption
+            elif update.message.animation:
+                message_data['file_id'] = update.message.animation.file_id
+                message_data['type'] = 'animation'
+                if update.message.caption:
+                    message_data['caption'] = update.message.caption
             
             message_id = messages_collection.insert_one(message_data).inserted_id
             
@@ -548,6 +574,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                         photo=message_data['file_id'],
                         caption=photo_caption,
                         reply_markup=reply_markup
+                    )
+
+                elif message_data['type'] == 'animation':
+                    caption = message_data.get('caption', '')
+                    gif_caption = (
+                        "<b>📨 Sizga yangi anonim GIF keldi!</b>\n\n"
+                        f"{caption}\n\n"
+                        "↩️ Javob berish uchun xabarni chapga suring"
+                    )
+                    
+                    sent_message = await context.bot.send_animation(
+                        chat_id=recipient_id,
+                        animation=message_data['file_id'],
+                        caption=gif_caption,
+                        reply_markup=reply_markup,
+                        parse_mode='HTML'
                     )
                 
                 # Store the Telegram message ID
