@@ -1,6 +1,9 @@
 [Unit]
 Description=AnonimVaqti Telegram Bot
-After=network.target
+After=network.target mongodb.service
+Wants=network-online.target
+StartLimitIntervalSec=500
+StartLimitBurst=5
 
 [Service]
 Type=simple
@@ -9,8 +12,13 @@ WorkingDirectory=/home/ubuntu/AnonimVaqtiBot
 Environment=PYTHONPATH=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3.9
 Environment=PATH=/home/ubuntu/AnonimVaqtiBot/venv/bin:$PATH
 ExecStart=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3.9 bot.py
-Restart=always
-RestartSec=10
+Restart=on-failure
+RestartSec=5s
+TimeoutStartSec=0
+TimeoutStopSec=30
+KillMode=mixed
+StandardOutput=append:/var/log/anonimvaqti-bot.log
+StandardError=append:/var/log/anonimvaqti-bot.error.log
 
 [Install]
 WantedBy=multi-user.target 
