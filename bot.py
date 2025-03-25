@@ -1,6 +1,6 @@
 import os
 import logging
-from datetime import datetime
+from datetime import timezone
 import hashlib
 import secrets
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, InlineQueryResultArticle, InputTextMessageContent, BotCommand
@@ -24,6 +24,13 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
+# Set event loop policy at the start
+asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
+
+def get_utc_now():
+    """Get current UTC time in a timezone-aware way"""
+    return datetime.datetime.now(timezone.utc)
 
 # MongoDB setup with increased timeout
 try:
@@ -53,7 +60,7 @@ def generate_unique_code():
 
 def get_user_stats(user_id: int) -> dict:
     """Get user statistics and ranking"""
-    today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    today = get_utc_now().replace(hour=0, minute=0, second=0, microsecond=0)
     
     # Today's stats
     today_received = messages_collection.count_documents({
@@ -165,7 +172,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 '$set': {
                     'username': user.username,
                     'first_name': user.first_name,
-                    'last_active': datetime.utcnow(),
+                    'last_active': get_utc_now(),
                     'link_code': link_code
                 }
             },
@@ -284,7 +291,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     '$set': {
                         'username': update.effective_user.username,
                         'first_name': update.effective_user.first_name,
-                        'last_active': datetime.utcnow(),
+                        'last_active': get_utc_now(),
                         'link_code': link_code
                     }
                 },
@@ -345,7 +352,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     message_data = {
                         'sender_id': user_id,
                         'recipient_id': recipient_id,
-                        'timestamp': datetime.utcnow(),
+                        'timestamp': get_utc_now(),
                         'read': False,
                         'reply_to_message_id': replied_message.message_id  # Store the ID of the message being replied to
                     }
@@ -468,7 +475,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             message_data = {
                 'sender_id': user_id,
                 'recipient_id': recipient_id,
-                'timestamp': datetime.utcnow(),
+                'timestamp': get_utc_now(),
                 'read': False
             }
             
@@ -611,7 +618,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     {'user_id': user_id},
                     {
                         '$addToSet': {'blocked_users': sender_id},
-                        '$set': {'last_updated': datetime.utcnow()}
+                        '$set': {'last_updated': get_utc_now()}
                     },
                     upsert=True
                 )
@@ -677,7 +684,7 @@ async def url_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             {
                 '$set': {
                     'link_code': new_link_code,
-                    'last_active': datetime.utcnow()
+                    'last_active': get_utc_now()
                 }
             },
             upsert=True
@@ -720,7 +727,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 {
                     '$set': {
                         'link_code': link_code,
-                        'last_active': datetime.utcnow()
+                        'last_active': get_utc_now()
                     }
                 },
                 upsert=True
