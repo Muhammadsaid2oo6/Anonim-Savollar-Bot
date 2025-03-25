@@ -8,10 +8,11 @@ Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/AnonimVaqtiBot
 Environment=PYTHONPATH=/home/ubuntu/AnonimVaqtiBot
+Environment=PATH=/home/ubuntu/AnonimVaqtiBot/venv/bin:$PATH
 Environment=PYTHONUNBUFFERED=1
 ExecStart=/home/ubuntu/AnonimVaqtiBot/venv/bin/python3 bot.py
-Restart=on-failure
-RestartSec=30
+Restart=always
+RestartSec=10
 StandardOutput=append:/var/log/anonimvaqti-bot.log
 StandardError=append:/var/log/anonimvaqti-bot.error.log
 
