@@ -1,5 +1,5 @@
 ![image description](https://github.com/Muhammadsaid2oo6/AnonimVaqtiBot/blob/master/cover.jpg)
-# AnonimVaqti Bot
+# Anonim Savollar Bot
 
 Telegram bot for anonymous messaging.
 
