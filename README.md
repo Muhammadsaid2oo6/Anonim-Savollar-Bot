@@ -1,3 +1,4 @@
+![image description]([https://user-images.githubusercontent.com/…/your-upload.png](https://github.com/Muhammadsaid2oo6/AnonimVaqtiBot/blob/master/cover.jpg))
 # AnonimVaqti Bot
 
 Telegram bot for anonymous messaging.
